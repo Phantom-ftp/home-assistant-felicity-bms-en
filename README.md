@@ -378,11 +378,11 @@ cards:
               /* Dynamic background color matching the SOC level */
               {% set pct = states(config.entity) | int(0) %}
               {% if pct >= 31 %}
-                background: rgba(76, 175, 80, 0.2) !important;
+                background: #E8F5E9 !important;
               {% elif pct >= 20 %}
-                background: rgba(255, 152, 0, 0.2) !important;
+                background: #FFF3E0 !important;
               {% else %}
-                background: rgba(244, 67, 54, 0.25) !important;
+                background: #FFEBEE !important;
               {% endif %}
             } mushroom-state-item { margin: 0px !important; padding: 0px
             !important; } :host { 
@@ -392,6 +392,7 @@ cards:
               --title-font-weight: 700;
               --mush-spacing: 0px !important;
             }
+            
       # Battery Voltage Card
       - type: custom:mushroom-template-card
         entity: sensor.bms_felicity_battery_voltage
@@ -415,11 +416,11 @@ cards:
               /* Background color indicates voltage health */
               {% set v = states(config.entity) | float(0) %}
               {% if v >= 26.0 %}
-                background: rgba(76, 175, 80, 0.2) !important;
+                background: #E8F5E9 !important;
               {% elif v >= 24.99 %}
-                background: rgba(255, 152, 0, 0.2) !important;
+                background: #FFF3E0 !important;
               {% else %}
-                background: rgba(244, 67, 54, 0.25) !important;
+                background: #FFEBEE !important;
               {% endif %}
             } mushroom-state-item { margin: 0px !important; padding: 0px
             !important; } :host { 
@@ -429,6 +430,7 @@ cards:
               --title-font-weight: 700;
               --mush-spacing: 0px !important;
             }
+            
       # Battery Operational Status Card
       - type: custom:mushroom-template-card
         entity: sensor.bms_felicity_battery_status
@@ -464,13 +466,13 @@ cards:
               /* Background color follows operational status */
               {% set s = states(config.entity) | lower %}
               {% if s == 'discharging' %}
-                background: rgba(255, 152, 0, 0.2) !important;
+                background: #FFF3E0 !important;
               {% elif s == 'charging' %}
-                background: rgba(33, 150, 243, 0.2) !important;
+                background: #E3F2FD !important;
               {% elif 'idle' in s or 'standby' in s %}
-                background: rgba(76, 175, 80, 0.2) !important;
+                background: #E8F5E9 !important;
               {% else %}
-                background: rgba(128, 128, 128, 0.1) !important;
+                background: #F5F5F5 !important;
               {% endif %}
             } mushroom-state-item { margin: 0px !important; padding: 0px
             !important; } :host { 
@@ -479,6 +481,7 @@ cards:
               --secondary-font-size: 10px; 
               --mush-spacing: 0px !important;
             }
+            
   # Second row: Amps and Watts
   - type: grid
     columns: 2
@@ -487,6 +490,11 @@ cards:
       # Current (Amperage) monitoring
       - type: custom:mushroom-template-card
         entity: sensor.bms_felicity_battery_status
+        # --- ДОДАНО ТАП НА ЗАГАЛЬНИЙ СТРУМ ---
+        tap_action:
+          action: more-info
+          entity: sensor.bms_felicity_battery_current
+        # -------------------------------------
         primary: |
           {% set s = states(entity) | lower %}
           {% if s == 'discharging' %}
@@ -523,13 +531,13 @@ cards:
               {% set s = states(config.entity) | lower %}
               {% set val = states('sensor.bms_felicity_discharge_current') | float(0) %}
               {% if s == 'charging' %}
-                background: rgba(33, 150, 243, 0.2) !important;
+                background: #E3F2FD !important;
               {% elif s == 'discharging' %}
-                {% if val > 40 %} background: rgba(244, 67, 54, 0.25) !important;
-                {% elif val > 30 %} background: rgba(255, 152, 0, 0.2) !important;
-                {% else %} background: rgba(76, 175, 80, 0.2) !important; {% endif %}
+                {% if val > 40 %} background: #FFEBEE !important;
+                {% elif val > 30 %} background: #FFF3E0 !important;
+                {% else %} background: #E8F5E9 !important; {% endif %}
               {% else %}
-                background: rgba(128, 128, 128, 0.1) !important;
+                background: #F5F5F5 !important;
               {% endif %}
             } mushroom-state-item { margin: 0px !important; padding: 0px
             !important; } :host { 
@@ -538,9 +546,15 @@ cards:
               --secondary-font-size: 9px; 
               --mush-spacing: 0px !important;
             }
+            
       # Power (Wattage) monitoring
       - type: custom:mushroom-template-card
         entity: sensor.bms_felicity_battery_status
+        # --- ДОДАНО ТАП НА ЗАГАЛЬНУ ПОТУЖНІСТЬ ---
+        tap_action:
+          action: more-info
+          entity: sensor.bms_felicity_battery_power
+        # ----------------------------------------
         primary: |
           {% set s = states(entity) | lower %}
           {% if s == 'discharging' %}
@@ -577,13 +591,13 @@ cards:
               {% set s = states(config.entity) | lower %}
               {% set val = states('sensor.bms_felicity_discharge_power') | float(0) %}
               {% if s == 'charging' %}
-                background: rgba(33, 150, 243, 0.2) !important;
+                background: #E3F2FD !important;
               {% elif s == 'discharging' %}
-                {% if val > 1200 %} background: rgba(244, 67, 54, 0.25) !important;
-                {% elif val > 1000 %} background: rgba(255, 152, 0, 0.2) !important;
-                {% else %} background: rgba(76, 175, 80, 0.2) !important; {% endif %}
+                {% if val > 1200 %} background: #FFEBEE !important;
+                {% elif val > 1000 %} background: #FFF3E0 !important;
+                {% else %} background: #E8F5E9 !important; {% endif %}
               {% else %}
-                background: rgba(128, 128, 128, 0.1) !important;
+                background: #F5F5F5 !important;
               {% endif %}
             } mushroom-state-item { margin: 0px !important; padding: 0px
             !important; } :host { 
@@ -592,6 +606,7 @@ cards:
               --secondary-font-size: 9px; 
               --mush-spacing: 0px !important;
             }
+            
   # Third row: Temp and Health
   - type: grid
     columns: 2
@@ -620,11 +635,11 @@ cards:
               /* Visual temperature health monitoring */
               {% set t = states(config.entity) | float(0) %}
               {% if t >= 20 and t <= 30 %}
-                background: rgba(76, 175, 80, 0.2) !important;
+                background: #E8F5E9 !important;
               {% elif t >= 10 and t <= 40 %}
-                background: rgba(255, 152, 0, 0.2) !important;
+                background: #FFF3E0 !important;
               {% else %}
-                background: rgba(244, 67, 54, 0.25) !important;
+                background: #FFEBEE !important;
               {% endif %}
             } mushroom-state-item { margin: 0px !important; padding: 0px
             !important; } :host { 
@@ -633,6 +648,7 @@ cards:
               --secondary-font-size: 9px; 
               --mush-spacing: 0px !important;
             }
+            
       # Battery State of Health (SOH)
       - type: custom:mushroom-template-card
         entity: sensor.bms_felicity_battery_soh
@@ -656,11 +672,11 @@ cards:
               /* Background based on battery degradation level */
               {% set h = states(config.entity) | float(0) %}
               {% if h >= 90 %}
-                background: rgba(76, 175, 80, 0.2) !important;
+                background: #E8F5E9 !important;
               {% elif h >= 70 %}
-                background: rgba(255, 152, 0, 0.2) !important;
+                background: #FFF3E0 !important;
               {% else %}
-                background: rgba(244, 67, 54, 0.25) !important;
+                background: #FFEBEE !important;
               {% endif %}
             } mushroom-state-item { margin: 0px !important; padding: 0px
             !important; } :host { 

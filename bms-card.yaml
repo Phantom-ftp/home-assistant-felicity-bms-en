@@ -31,17 +31,26 @@ cards:
               justify-content: center !important;
               align-items: flex-start !important;
               padding-left: 0px !important;
-              /* Dynamic background color matching the SOC level */
+              background: var(--ha-card-background, var(--card-background-color, white)) !important;
+              position: relative;
+            }
+            ha-card::before {
+              content: '';
+              position: absolute;
+              top: 0; left: 0; right: 0; bottom: 0;
+              border-radius: inherit;
+              pointer-events: none;
               {% set pct = states(config.entity) | int(0) %}
               {% if pct >= 31 %}
-                background: #E8F5E9 !important;
+                background-color: rgba(76, 175, 80, 0.15) !important;
               {% elif pct >= 20 %}
-                background: #FFF3E0 !important;
+                background-color: rgba(255, 152, 0, 0.15) !important;
               {% else %}
-                background: #FFEBEE !important;
+                background-color: rgba(244, 67, 54, 0.2) !important;
               {% endif %}
-            } mushroom-state-item { margin: 0px !important; padding: 0px
-            !important; } :host { 
+            }
+            mushroom-state-item { margin: 0px !important; padding: 0px !important; }
+            :host { 
               --mush-icon-size: 30px !important; 
               --title-font-size: 18px !important; 
               --secondary-font-size: 10px; 
@@ -69,17 +78,26 @@ cards:
               justify-content: center !important;
               align-items: flex-start !important;
               padding-left: 0px !important;
-              /* Background color indicates voltage health */
+              background: var(--ha-card-background, var(--card-background-color, white)) !important;
+              position: relative;
+            }
+            ha-card::before {
+              content: '';
+              position: absolute;
+              top: 0; left: 0; right: 0; bottom: 0;
+              border-radius: inherit;
+              pointer-events: none;
               {% set v = states(config.entity) | float(0) %}
               {% if v >= 26.0 %}
-                background: #E8F5E9 !important;
+                background-color: rgba(76, 175, 80, 0.15) !important;
               {% elif v >= 24.99 %}
-                background: #FFF3E0 !important;
+                background-color: rgba(255, 152, 0, 0.15) !important;
               {% else %}
-                background: #FFEBEE !important;
+                background-color: rgba(244, 67, 54, 0.2) !important;
               {% endif %}
-            } mushroom-state-item { margin: 0px !important; padding: 0px
-            !important; } :host { 
+            }
+            mushroom-state-item { margin: 0px !important; padding: 0px !important; }
+            :host { 
               --mush-icon-size: 30px !important; 
               --title-font-size: 16px !important; 
               --secondary-font-size: 10px;
@@ -119,19 +137,28 @@ cards:
               justify-content: center !important;
               align-items: flex-start !important;
               padding-left: 0px !important;
-              /* Background color follows operational status */
+              background: var(--ha-card-background, var(--card-background-color, white)) !important;
+              position: relative;
+            }
+            ha-card::before {
+              content: '';
+              position: absolute;
+              top: 0; left: 0; right: 0; bottom: 0;
+              border-radius: inherit;
+              pointer-events: none;
               {% set s = states(config.entity) | lower %}
               {% if s == 'discharging' %}
-                background: #FFF3E0 !important;
+                background-color: rgba(255, 152, 0, 0.15) !important;
               {% elif s == 'charging' %}
-                background: #E3F2FD !important;
+                background-color: rgba(33, 150, 243, 0.15) !important;
               {% elif 'idle' in s or 'standby' in s %}
-                background: #E8F5E9 !important;
+                background-color: rgba(76, 175, 80, 0.15) !important;
               {% else %}
-                background: #F5F5F5 !important;
+                background-color: rgba(128, 128, 128, 0.1) !important;
               {% endif %}
-            } mushroom-state-item { margin: 0px !important; padding: 0px
-            !important; } :host { 
+            }
+            mushroom-state-item { margin: 0px !important; padding: 0px !important; }
+            :host { 
               --mush-icon-size: 30px !important; 
               --title-font-size: 12px; 
               --secondary-font-size: 10px; 
@@ -145,14 +172,14 @@ cards:
     cards:
       # Current (Amperage) monitoring
       - type: custom:mushroom-template-card
-        entity: sensor.bms_felicity_battery_status
+        entity: sensor.bms_felicity_battery_current
         # --- ДОДАНО ТАП НА ЗАГАЛЬНИЙ СТРУМ ---
         tap_action:
           action: more-info
           entity: sensor.bms_felicity_battery_current
         # -------------------------------------
         primary: |
-          {% set s = states(entity) | lower %}
+          {% set s = states('sensor.bms_felicity_battery_status') | lower %}
           {% if s == 'discharging' %}
             {{ states('sensor.bms_felicity_discharge_current') | float(0) | round(2) }} A
           {% elif s == 'charging' %}
@@ -161,12 +188,12 @@ cards:
             0.00 A
           {% endif %}
         secondary: >
-          {% set s = states(entity) | lower %} {{ 'Discharge Current' if s ==
+          {% set s = states('sensor.bms_felicity_battery_status') | lower %} {{ 'Discharge Current' if s ==
           'discharging' else 'Charge Current' }}
         icon: mdi:lightning-bolt
         # Warning colors for high discharge current
         icon_color: >
-          {% set s = states(entity) | lower %} {% set val =
+          {% set s = states('sensor.bms_felicity_battery_status') | lower %} {% set val =
           states('sensor.bms_felicity_discharge_current') | float(0) %} {% if s
           == 'charging' %} blue {% elif s == 'discharging' %}
             {% if val > 40 %} red
@@ -183,20 +210,29 @@ cards:
               justify-content: center !important;
               align-items: flex-start !important;
               padding-left: 0px !important;
-              /* Background alert for heavy loads (>40A) */
-              {% set s = states(config.entity) | lower %}
+              background: var(--ha-card-background, var(--card-background-color, white)) !important;
+              position: relative;
+            }
+            ha-card::before {
+              content: '';
+              position: absolute;
+              top: 0; left: 0; right: 0; bottom: 0;
+              border-radius: inherit;
+              pointer-events: none;
+              {% set s = states('sensor.bms_felicity_battery_status') | lower %}
               {% set val = states('sensor.bms_felicity_discharge_current') | float(0) %}
               {% if s == 'charging' %}
-                background: #E3F2FD !important;
+                background-color: rgba(33, 150, 243, 0.15) !important;
               {% elif s == 'discharging' %}
-                {% if val > 40 %} background: #FFEBEE !important;
-                {% elif val > 30 %} background: #FFF3E0 !important;
-                {% else %} background: #E8F5E9 !important; {% endif %}
+                {% if val > 40 %} background-color: rgba(244, 67, 54, 0.2) !important;
+                {% elif val > 30 %} background-color: rgba(255, 152, 0, 0.15) !important;
+                {% else %} background-color: rgba(76, 175, 80, 0.15) !important; {% endif %}
               {% else %}
-                background: #F5F5F5 !important;
+                background-color: rgba(128, 128, 128, 0.05) !important;
               {% endif %}
-            } mushroom-state-item { margin: 0px !important; padding: 0px
-            !important; } :host { 
+            }
+            mushroom-state-item { margin: 0px !important; padding: 0px !important; }
+            :host { 
               --mush-icon-size: 26px !important; 
               --title-font-size: 13px; 
               --secondary-font-size: 9px; 
@@ -205,14 +241,14 @@ cards:
             
       # Power (Wattage) monitoring
       - type: custom:mushroom-template-card
-        entity: sensor.bms_felicity_battery_status
+        entity: sensor.bms_felicity_battery_power
         # --- ДОДАНО ТАП НА ЗАГАЛЬНУ ПОТУЖНІСТЬ ---
         tap_action:
           action: more-info
           entity: sensor.bms_felicity_battery_power
         # ----------------------------------------
         primary: |
-          {% set s = states(entity) | lower %}
+          {% set s = states('sensor.bms_felicity_battery_status') | lower %}
           {% if s == 'discharging' %}
             {{ states('sensor.bms_felicity_discharge_power') | float(0) | round(0) }} W
           {% elif s == 'charging' %}
@@ -221,12 +257,12 @@ cards:
             0 W
           {% endif %}
         secondary: >
-          {% set s = states(entity) | lower %} {{ 'Discharge Power' if s ==
+          {% set s = states('sensor.bms_felicity_battery_status') | lower %} {{ 'Discharge Power' if s ==
           'discharging' else 'Charge Power' }}
         icon: mdi:flash
         # Warning colors for high power draw
         icon_color: >
-          {% set s = states(entity) | lower %} {% set val =
+          {% set s = states('sensor.bms_felicity_battery_status') | lower %} {% set val =
           states('sensor.bms_felicity_discharge_power') | float(0) %} {% if s ==
           'charging' %} blue {% elif s == 'discharging' %}
             {% if val > 1200 %} red
@@ -243,20 +279,29 @@ cards:
               justify-content: center !important;
               align-items: flex-start !important;
               padding-left: 0px !important;
-              /* Background alert for high power draw (>1200W) */
-              {% set s = states(config.entity) | lower %}
+              background: var(--ha-card-background, var(--card-background-color, white)) !important;
+              position: relative;
+            }
+            ha-card::before {
+              content: '';
+              position: absolute;
+              top: 0; left: 0; right: 0; bottom: 0;
+              border-radius: inherit;
+              pointer-events: none;
+              {% set s = states('sensor.bms_felicity_battery_status') | lower %}
               {% set val = states('sensor.bms_felicity_discharge_power') | float(0) %}
               {% if s == 'charging' %}
-                background: #E3F2FD !important;
+                background-color: rgba(33, 150, 243, 0.15) !important;
               {% elif s == 'discharging' %}
-                {% if val > 1200 %} background: #FFEBEE !important;
-                {% elif val > 1000 %} background: #FFF3E0 !important;
-                {% else %} background: #E8F5E9 !important; {% endif %}
+                {% if val > 1200 %} background-color: rgba(244, 67, 54, 0.2) !important;
+                {% elif val > 1000 %} background-color: rgba(255, 152, 0, 0.15) !important;
+                {% else %} background-color: rgba(76, 175, 80, 0.15) !important; {% endif %}
               {% else %}
-                background: #F5F5F5 !important;
+                background-color: rgba(128, 128, 128, 0.05) !important;
               {% endif %}
-            } mushroom-state-item { margin: 0px !important; padding: 0px
-            !important; } :host { 
+            }
+            mushroom-state-item { margin: 0px !important; padding: 0px !important; }
+            :host { 
               --mush-icon-size: 26px !important; 
               --title-font-size: 13px; 
               --secondary-font-size: 9px; 
@@ -288,17 +333,26 @@ cards:
               justify-content: center !important;
               align-items: flex-start !important;
               padding-left: 0px !important;
-              /* Visual temperature health monitoring */
+              background: var(--ha-card-background, var(--card-background-color, white)) !important;
+              position: relative;
+            }
+            ha-card::before {
+              content: '';
+              position: absolute;
+              top: 0; left: 0; right: 0; bottom: 0;
+              border-radius: inherit;
+              pointer-events: none;
               {% set t = states(config.entity) | float(0) %}
               {% if t >= 20 and t <= 30 %}
-                background: #E8F5E9 !important;
+                background-color: rgba(76, 175, 80, 0.15) !important;
               {% elif t >= 10 and t <= 40 %}
-                background: #FFF3E0 !important;
+                background-color: rgba(255, 152, 0, 0.15) !important;
               {% else %}
-                background: #FFEBEE !important;
+                background-color: rgba(244, 67, 54, 0.2) !important;
               {% endif %}
-            } mushroom-state-item { margin: 0px !important; padding: 0px
-            !important; } :host { 
+            }
+            mushroom-state-item { margin: 0px !important; padding: 0px !important; }
+            :host { 
               --mush-icon-size: 26px !important; 
               --title-font-size: 13px; 
               --secondary-font-size: 9px; 
@@ -325,17 +379,26 @@ cards:
               justify-content: center !important;
               align-items: flex-start !important;
               padding-left: 0px !important;
-              /* Background based on battery degradation level */
+              background: var(--ha-card-background, var(--card-background-color, white)) !important;
+              position: relative;
+            }
+            ha-card::before {
+              content: '';
+              position: absolute;
+              top: 0; left: 0; right: 0; bottom: 0;
+              border-radius: inherit;
+              pointer-events: none;
               {% set h = states(config.entity) | float(0) %}
               {% if h >= 90 %}
-                background: #E8F5E9 !important;
+                background-color: rgba(76, 175, 80, 0.15) !important;
               {% elif h >= 70 %}
-                background: #FFF3E0 !important;
+                background-color: rgba(255, 152, 0, 0.15) !important;
               {% else %}
-                background: #FFEBEE !important;
+                background-color: rgba(244, 67, 54, 0.2) !important;
               {% endif %}
-            } mushroom-state-item { margin: 0px !important; padding: 0px
-            !important; } :host { 
+            }
+            mushroom-state-item { margin: 0px !important; padding: 0px !important; }
+            :host { 
               --mush-icon-size: 26px !important; 
               --title-font-size: 13px; 
               --secondary-font-size: 9px; 
